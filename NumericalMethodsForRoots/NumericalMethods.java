@@ -5,6 +5,7 @@ import java.util.Scanner;
 public class NumericalMethods {
     private static int attempts = 0;
     private static double tolerance = .000001;
+    private static int eq = 0;
 
     /**
      * Evaluates the function
@@ -13,7 +14,13 @@ public class NumericalMethods {
      * @return the value of the function
      */
     public static float function(float x) {
-        return (float) (Math.pow(x, 2) - (5 * x) - 6); // x^2 -5x -6
+        if (eq == 1) {
+            return (float) (Math.pow(x, 2) - (5 * x) - 6); // x^2 -5x -6
+        } else if (eq == 2) {
+            return (float) (3 * Math.toDegrees(Math.sin(Math.toRadians(x))) - 5 * Math.toDegrees(Math.cos(Math.toRadians(x))));
+        } else {
+            return (float) (Math.pow(Math.E, x) + Math.pow(x, 2));
+        }
     }
 
     /**
@@ -23,7 +30,13 @@ public class NumericalMethods {
      * @return the value of the derivative
      */
     public static float derivative(float x) {
-        return 2 * x - 5; // 2x-5
+        if (eq == 1) {
+            return 2 * x - 5; // 2x-5
+        } else if (eq == 2) {
+            return (float) (3 * Math.cos(Math.toRadians(x)) + 5 * Math.sin(Math.toRadians(x)));
+        } else {
+            return (float) (Math.pow(Math.E, x) + 2 * x);
+        }
     }
 
     /**
@@ -59,19 +72,26 @@ public class NumericalMethods {
      */
     public static float bisectionMethod(float a, float b) {
         float c = midPoint(a, b);
-        if (Math.abs(function(c)) > tolerance) {
+        while (Math.abs(function(c)) > tolerance) {
             if (oppositeSigns(function(c), function(a))) {
                 b = c;
             } else {
                 a = c;
             }
             attempts++;
-            return bisectionMethod(a, b);
-        } else {
-            attempts++;
-            return c;
+            c = midPoint(a, b);
         }
+        return c;
     }
+        /*
+        while (Math.abs(function(midPoint)) > close) {
+      bisectionTrials++;
+      if (function(midPoint) * function(a) > 0) a = midPoint;
+      else b = midPoint;
+      midPoint = (a + b) / 2;
+    }
+    return midPoint;
+         */
 
     /**
      * Uses Newton's Method to find the root of a function, given the domain of the function and the guarantee of the
@@ -111,17 +131,38 @@ public class NumericalMethods {
     }
 
     public static void main(String args[]) {
-        // TODO: Options for multiple equations
-//        Scanner in = new Scanner(System.in);
-//        System.out.println("Which equation would you like to use?");
+        for (eq = 1; eq < 4; eq++) {
+            if (eq == 1) {
+                attempts = 0;
+                System.out.println("bisection:\tx: " + bisectionMethod(-4, 5) + ",\titerations: " + attempts);
+                attempts = 0;
+                System.out.println("netwon:\tx: " + newtonsMethod(-7) + ",\titerations: " + attempts);
+                attempts = 0;
+                System.out.println("secant:\tx: " + secantMethod(-4, 5) + ",\titerations: " + attempts);
+                System.out.println("=============================================\n");
 
-        System.out.println("Current Equation: x^2 - 5x - 6");
-        attempts = 0;
-        System.out.println("bisection:\tx: " + bisectionMethod(-4, 5) + ",\titerations: " + attempts);
-        attempts = 0;
-        System.out.println("netwon:\tx: " + newtonsMethod(-7) + ",\titerations: " + attempts);
-        attempts = 0;
-        System.out.println("secant:\tx: " + secantMethod(-4, 5) + ",\titerations: " + attempts);
+
+            } else if (eq == 2) {
+                attempts = 0;
+                System.out.println("bisection:\tx: " + bisectionMethod(-1, 3) + ",\titerations: " + attempts);
+                attempts = 0;
+                System.out.println("netwon:\tx: " + newtonsMethod(-7) + ",\titerations: " + attempts);
+                attempts = 0;
+                System.out.println("secant:\tx: " + secantMethod(-1, 3) + ",\titerations: " + attempts);
+                System.out.println("=============================================\n");
+
+            } else {
+                attempts = 0;
+                System.out.println("bisection:\tx: " + bisectionMethod(-2, 2) + ",\titerations: " + attempts);
+                attempts = 0;
+                System.out.println("netwon:\tx: " + newtonsMethod(1) + ",\titerations: " + attempts);
+                attempts = 0;
+                System.out.println("secant:\tx: " + secantMethod(-2, 2) + ",\titerations: " + attempts);
+                System.out.println("=============================================\n");
+
+            }
+
+        }
 
     }
 
